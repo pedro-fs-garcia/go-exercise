@@ -1,0 +1,41 @@
+version: '3'
+
+vars:
+  BIN_DIR: bin
+  EXECUTABLE_NAME: training{{exeExt}}
+
+tasks:
+  vet:
+    cmds:
+      - go vet ./...
+
+  format:
+    cmds:
+      - go fmt ./...
+
+  test:
+    cmds:
+      - go test ./...
+
+  pre-commit:
+    cmds:
+      - task format
+      - task vet
+      - task test
+    
+  run:
+    cmds:
+      - go run main.go
+
+  build:
+    cmds:
+      - go build -o ./{{.BIN_DIR}}/{{.EXECUTABLE_NAME}} main.go
+
+  execute:
+    cmds:
+      - ./{{.BIN_DIR}}/{{.EXECUTABLE_NAME}}
+
+  all:
+    cmds:
+      - task build
+      - task execute
