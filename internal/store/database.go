@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"io/fs"
+	"training/config"
 
 	"github.com/pressly/goose/v3"
 
@@ -11,7 +12,16 @@ import (
 )
 
 func Open() (*sql.DB, error) {
-	db, err := sql.Open("pgx", "host=localhost user=postgres password=postgres dbname=workouts_db port=5432 sslmode=disable")
+	str := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
+		config.DB_HOST(),
+		config.DB_USER(),
+		config.DB_PASSWORD(),
+		config.DB_NAME(),
+		config.DB_PORT(),
+		"disable",
+	)
+	db, err := sql.Open("pgx", str)
 	if err != nil {
 		return nil, fmt.Errorf("db: open %w", err)
 	}

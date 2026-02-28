@@ -5,11 +5,18 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+	"training/config"
+	_ "training/config"
 	"training/internal/app"
 	"training/internal/routes"
 )
 
 func main() {
+	err := config.LoadEnvironment()
+	if err != nil {
+		panic(err)
+	}
+
 	var port int
 	flag.IntVar(&port, "port", 8080, "go backend server port")
 	flag.Parse()

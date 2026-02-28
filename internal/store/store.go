@@ -83,8 +83,25 @@ func (pg *PostgresWorkoutStore) CreateWorkout(workout *Workout) (*Workout, error
 
 	return workout, nil
 }
-
 func (pg *PostgresWorkoutStore) GetWorkoutByID(id int64) (*Workout, error) {
-	workout := &Workout{}
-	return workout, nil
+	query := `
+		SELECT id, name, description, created_at
+		FROM workouts
+		WHERE id = $1
+	`
+
+	var workout Workout
+
+	err := pg.db.QueryRow(query, id).Scan(
+		&workout.ID,
+		&workout.Title,
+		&workout.Description,
+		&workout.DurationMinutes,
+		&workout.CaloriesBurned,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &workout, nil
 }
